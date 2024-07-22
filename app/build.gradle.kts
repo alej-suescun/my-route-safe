@@ -12,8 +12,8 @@ android {
         applicationId = "com.asd.liceofesan.myroutesafe"
         minSdk = 23
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.0a"
+        versionCode = 2
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,6 +26,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    buildFeatures {
+        viewBinding = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -62,4 +65,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     //Google MAPS
     implementation ("com.google.android.gms:play-services-maps:19.0.0")
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
 }
