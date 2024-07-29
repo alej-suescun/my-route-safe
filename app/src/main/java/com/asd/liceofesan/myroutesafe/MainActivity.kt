@@ -3,25 +3,34 @@ package com.asd.liceofesan.myroutesafe
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
-import androidx.core.content.ContextCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
+import com.google.android.gms.maps.model.LatLng
+import kotlin.system.exitProcess
+
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButtonClickListener {
     //mafufadas
@@ -31,6 +40,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
     private var hayPermisos = false
     private var mGoogleMap:GoogleMap? = null
     private val permissionCode = 101
+    private val CHANNEL_ID = "MY_ROUTE_SAFE"
+    private val EXTRA_NOTIFICATION_ID = "MY_ROUTE_SAFE2"
+    @SuppressLint("MissingPermission", "ObsoleteSdkInt")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,6 +61,50 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         fetchLocation()
+
+        //notificacion que no se quita
+
+        createNotificationChannel()
+
+        //Accion cuando se presiona
+        val intent = Intent(this, MainActivity::class.java)
+        val intentPendingIntent = PendingIntent.getActivity(
+            this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        //boton de cerrar
+        val cerrarIntent = Intent(this, NotificationAppKiller::class.java)
+        val flag_notif = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            PendingIntent.FLAG_IMMUTABLE
+        } else { 0 }
+
+        val cerrarPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(this, 0, cerrarIntent,
+                flag_notif)
+
+        val titulo_notificaion = "My Route Safe se esta ejecutando"
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE) //Icono
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSilent(true) //Notificacion silenciosa
+            .setContentText(titulo_notificaion) //titulo
+            .setPriority(NotificationCompat.PRIORITY_MAX) //Prioridad
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setCategory(LOCATION_SERVICE)
+            .setContentIntent(intentPendingIntent)
+            .addAction(0, getString(R.string.cerrar), cerrarPendingIntent)
+            .setOngoing(true)
+
+
+        val notificationManager = NotificationManagerCompat.from(this)
+
+        //Android 13 para en adelante necesita permisos
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { //Tiramisu es android 13
+            val permisos = arrayListOf(Manifest.permission.POST_NOTIFICATIONS)
+            val permisosArray = permisos.toTypedArray()
+            tiene_permisos_notif(permisosArray)
+        }
+
+        notificationManager.notify(1, notification.build())
+        Log.d("Creation", "Si compilo")
     }
 
     private fun fetchLocation(){
@@ -153,5 +209,46 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
         mGoogleMap?.animateCamera(CameraUpdateFactory.zoomTo(21.0f))
 
         return false
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun tiene_permisos_notif(permisos: Array<String>){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            solicitarPermisos(permisos)
+            return
+        }
+    }
+    class NotificationAppKiller: BroadcastReceiver() {
+        val activity = MainActivity()
+        override fun onReceive(context: Context?, intent: Intent?) {
+
+            if (intent!=null){
+                val mnotificationManager =
+                    context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                mnotificationManager.cancel(1)
+                exitProcess(0)
+
+            }
+        }
     }
 }
