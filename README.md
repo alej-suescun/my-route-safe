@@ -26,6 +26,7 @@ Desarrollado por:
 * Miguel Angel Velasco Suárez 
 * Pablo Ignacio Cano Mantilla
 * Juan Sebastian Giraldo Escobar
+
 Énfasis en ciencias básicas, Liceo Fesan, Bogotá D.C, Colombia, año 2023 - 2024
 _Trabajo de grado como requisito
 para optar al título de bachiller._
@@ -60,6 +61,7 @@ Developed by:
 * Miguel Angel Velasco Suárez 
 * Pablo Ignacio Cano Mantilla
 * Juan Sebastian Giraldo Escobar
+
 Énfasis en ciencias básicas, Liceo Fesan, Bogotá D.C, Colombia, año 2023 - 2024
 _Trabajo de grado como requisito
 para optar al título de bachiller._
