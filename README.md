@@ -18,10 +18,15 @@ Aplicación desarrollada por:
 Logo de la aplicación creada por:
 * Diego Nicolas Martinez Tovar 
 
+
 My Route Safe: Una Aplicación Con El Propósito Del Seguimiento De Rutas Escolares Para Padres De Familia Y Conductores
+
 Dirigido por:
+
 * Miguel Olives Romero (Docente)
+
 Desarrollado por:
+
 * Alejandro Suescún Dueñas (Líder del proyecto de investigación)
 * Miguel Angel Velasco Suárez 
 * Pablo Ignacio Cano Mantilla
@@ -30,6 +35,7 @@ Desarrollado por:
 Énfasis en ciencias básicas, Liceo Fesan, Bogotá D.C, Colombia, año 2023 - 2024
 _Trabajo de grado como requisito
 para optar al título de bachiller._
+
 
 
 # INGLES/ENGLISH
@@ -53,10 +59,15 @@ Application developed by:
 App logo created by:
 * Diego Nicolas Martinez Tovar
 
-My Route Safe: Una Aplicación Con El Propósito Del Seguimiento De Rutas Escolares Para Padres De Familia Y Conductores /
+
+My Route Safe: An Application For Tracking School Routes For Parents And Drivers 
+
 Supervised by:
+
 * Miguel Olives Romero (Teacher)
+
 Developed by:
+
 * Alejandro Suescún Dueñas (Research Project Leader)
 * Miguel Angel Velasco Suárez 
 * Pablo Ignacio Cano Mantilla
