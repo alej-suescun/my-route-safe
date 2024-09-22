@@ -16,7 +16,7 @@ Aplicación desarrollada por:
 * Alejandro _"ASDgaming"_ Suescún Dueñas
 
 Logo de la aplicación creada por:
-* Diego Nicolas Martinez Tovar 
+* Diego Nicolás Martínez Tovar 
 
 
 My Route Safe: Una Aplicación Con El Propósito Del Seguimiento De Rutas Escolares Para Padres De Familia Y Conductores
@@ -57,7 +57,7 @@ Application developed by:
 * Alejandro _"ASDgaming"_ Suescún Dueñas
 
 App logo created by:
-* Diego Nicolas Martinez Tovar
+* Diego Nicolás Martínez Tovar
 
 
 My Route Safe: An Application For Tracking School Routes For Parents And Drivers 
