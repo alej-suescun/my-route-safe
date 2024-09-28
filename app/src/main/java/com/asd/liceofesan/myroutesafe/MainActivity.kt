@@ -22,6 +22,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -35,6 +37,8 @@ import kotlin.system.exitProcess
 class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButtonClickListener {
     //mafufadas
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     //private lateinit var locationCallback: OnMapReadyCallback
     private lateinit var currentLocation: Location
     private var hayPermisos = false
@@ -54,16 +58,33 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
         }
         //de aqui pa abajo escribir
 
+        Log.d("ASD", "Permisos notif")
+        //Permisos de notificacion
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { //Tiramisu es android 13
+            val permisos = arrayListOf(Manifest.permission.POST_NOTIFICATIONS)
+            val permisosArray = permisos.toTypedArray()
+            tiene_permisos_notif(permisosArray)
+        }
+
+        //Inicializa el servicio
+        val intent = Intent(this, RastreoLocation::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+
+
         val mapaPrincipal = supportFragmentManager
             .findFragmentById(R.id.mapaPrincipal) as SupportMapFragment
         mapaPrincipal.getMapAsync(this)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fetchLocation()
-
-        //notificacion que no se quita
-
+        /*
+        //notificacion que "no se quita"
         createNotificationChannel()
 
         //Accion cuando se presiona
@@ -103,10 +124,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
             tiene_permisos_notif(permisosArray)
         }
 
-        notificationManager.notify(1, notification.build())
+        notificationManager.notify(1, notification.build())*/
         Log.d("Creation", "Si compilo")
+
+
+    }
+    
+    /*
+    override fun onResume() {
+        super.onResume()
+        if (requestingLocationUpdates) startLocationUpdates()
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+    */
+
+    @SuppressLint("MissingPermission") //comentar si crashea
     private fun fetchLocation(){
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -132,6 +169,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
         hayPermisos = true
     }
 
+    //Funcion de para pedir permisos
     private fun solicitarPermisos(permisos: Array<String>) {
         requestPermissions(permisos, permissionCode)
     }
@@ -167,7 +205,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
         }
     }
 
-
+    //Mapa y sus configs
     override fun onMapReady(googleMap: GoogleMap) {
         this.mGoogleMap = googleMap
 
@@ -188,7 +226,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
 
         tienePermisos(permisosArray)
 
-        @SuppressLint("MissingPermission")
+        @SuppressLint("MissingPermission") //Permisos pedidos arriba
         if (hayPermisos){
             //ubicacion
             googleMap.isMyLocationEnabled = true
@@ -211,6 +249,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
         return false
     }
 
+/*
+    //Notificacion
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is not in the Support Library.
@@ -226,7 +266,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-    }
+    }*/
 
     private fun tiene_permisos_notif(permisos: Array<String>){
         if (ActivityCompat.checkSelfPermission(
@@ -238,17 +278,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, OnMyLocationButton
             return
         }
     }
+    /*
     class NotificationAppKiller: BroadcastReceiver() {
         val activity = MainActivity()
         override fun onReceive(context: Context?, intent: Intent?) {
 
             if (intent!=null){
-                val mnotificationManager =
-                    context?.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                mnotificationManager.cancel(1)
                 exitProcess(0)
-
             }
         }
-    }
+    }*/
 }

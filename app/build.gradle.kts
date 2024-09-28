@@ -12,8 +12,8 @@ android {
         applicationId = "com.asd.liceofesan.myroutesafe"
         minSdk = 23
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.2"
+        versionCode = 6
+        versionName = "0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -64,6 +64,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     //Google MAPS
-    implementation ("com.google.android.gms:play-services-maps:19.0.0")
-    implementation ("com.google.android.gms:play-services-location:21.3.0")
+    implementation (libs.play.services.maps)
+    implementation (libs.play.services.location)
+    //Si falla descomentar lo de abajo
+    //implementation ("com.google.android.gms:play-services-maps:19.0.0")
+    //implementation 'com.google.android.gms:play-services-location:21.3.0'
+
 }
