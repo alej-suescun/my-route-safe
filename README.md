@@ -10,6 +10,7 @@ My Route Safe es el prototipo de una aplicación para dispositivos móviles andr
 * 0.0a (Agrega un mapa basico)
 * 0.1 (Agrega la ubicacion actual con el codigo mejorado)
 * 0.2 (Agrega Notificacion flotante que no se quita)
+* 0.3 (Aplicacion queda en segundo plano con su respectiva notificacion)
 
 ### Créditos 
 Aplicación desarrollada por: 
